@@ -43,6 +43,14 @@ nav a:hover {
   color: #e91e63;
 }
 
+#confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0; /* Keep it below the text, but above the background */
+  pointer-events: none; /* Allows clicks to pass through to the elements below */
+}
+/* Hero */
 /* Hero */
 .hero {
   background: linear-gradient(135deg, #ffeb3b, #e91e63, #4caf50);
@@ -50,22 +58,35 @@ nav a:hover {
   height: 90vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* CHANGE: Use flex-start to align content to the top of the flex container */
+  justify-content: flex-start;
   align-items: center;
   animation: fadeIn 2s ease-in-out;
   position: relative;
   overflow: hidden;
   padding: 1rem;
+
+  /* CRITICAL FIX: Push the top content down past the nav bar.
+     We use a slightly large value to clear the nav height (~4rem) plus margin. */
+  padding-top: 5rem;
 }
 
 .hero h1 {
   font-size: 2rem;
-  margin-top: 6rem; /* Added top margin */
+  margin-top: 0; /* Changed from 6rem to 0 */
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Added text shadow for visibility */
 }
 
-.hero p {
+.hero .date-tag {
+  /* Changed from .hero p to use the new class for clarity */
   font-size: 1.2rem;
   margin-top: 0.5rem;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1; /* Puts the text above the canvas (z-index: 0) */
 }
 
 @keyframes fadeIn {
@@ -409,4 +430,58 @@ footer a {
 
 .photo-modal-close:hover {
   color: #e91e63;
+}
+
+/* NEW: Teaser Style */
+.hero .teaser {
+  font-size: 1.2rem;
+  font-family: "Playfair Display", serif;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* NEW: Countdown Container */
+#countdown-timer {
+  display: flex;
+  gap: 10px;
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.15); /* Subtle background for elegance */
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* NEW: Countdown Units (Labels) */
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* NEW: Countdown Numbers */
+.countdown-unit span {
+  font-family: "Playfair Display", serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: #ffeb3b; /* Highlight the numbers in yellow */
+  margin-bottom: 5px;
+}
+
+/* Responsive adjustments for countdown numbers */
+@media (min-width: 600px) {
+  .countdown-unit span {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .countdown-unit span {
+    font-size: 4rem;
+  }
+  .countdown-unit {
+    font-size: 1rem;
+  }
 }

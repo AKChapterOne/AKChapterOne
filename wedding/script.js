@@ -1,17 +1,22 @@
 // Confetti Animation
 const confettiCanvas = document.getElementById("confetti");
 const ctx = confettiCanvas.getContext("2d");
+const heroSection = document.getElementById("home");
 
 function resizeCanvas() {
+  // Set width to window width
   confettiCanvas.width = window.innerWidth;
-  confettiCanvas.height = window.innerHeight;
+
+  // CRITICAL CHANGE: Set height to the actual height of the hero section
+  confettiCanvas.height = heroSection.offsetHeight;
 }
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 const confetti = Array.from({ length: 120 }).map(() => ({
-  x: Math.random() * window.innerWidth,
-  y: Math.random() * window.innerHeight,
+  x: Math.random() * confettiCanvas.width,
+  // Use the newly calculated height for initial Y position
+  y: Math.random() * confettiCanvas.height,
   r: Math.random() * 6 + 4,
   d: Math.random() * 40,
   color: ["#ffeb3b", "#e91e63", "#4caf50"][Math.floor(Math.random() * 3)],
@@ -35,6 +40,7 @@ function updateConfetti() {
   confetti.forEach((p) => {
     p.y += Math.cos(p.d) + 1 + p.r / 2;
     p.x += Math.sin(p.d);
+
     if (p.y > confettiCanvas.height) {
       p.y = -10;
       p.x = Math.random() * confettiCanvas.width;
@@ -43,6 +49,58 @@ function updateConfetti() {
 }
 
 setInterval(drawConfetti, 20);
+
+const weddingDate = new Date("November 2, 2025 00:00:00").getTime();
+
+function updateCountdown() {
+  // Get today's date and time
+  const now = new Date().getTime();
+
+  // Find the distance between now and the count down date
+  const distance = weddingDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Get elements
+  const daysEl = document.getElementById("days");
+  const hoursEl = document.getElementById("hours");
+  const minutesEl = document.getElementById("minutes");
+  const secondsEl = document.getElementById("seconds");
+
+  // If the countdown container exists, update the content
+  if (daysEl && hoursEl && minutesEl && secondsEl) {
+    // Add leading zero if number is less than 10
+    daysEl.textContent = String(days).padStart(2, '0');
+    hoursEl.textContent = String(hours).padStart(2, '0');
+    minutesEl.textContent = String(minutes).padStart(2, '0');
+    secondsEl.textContent = String(seconds).padStart(2, '0');
+  }
+
+
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval(countdownInterval);
+    const timerContainer = document.getElementById("countdown-timer");
+    if (timerContainer) {
+      timerContainer.innerHTML = "We're Married! 🎉";
+      timerContainer.style.fontSize = "2rem";
+    }
+    const teaserEl = document.querySelector(".hero .teaser");
+    if (teaserEl) {
+      teaserEl.textContent = "Our Forever Has Begun.";
+    }
+  }
+}
+
+// Update the count down every 1 second
+const countdownInterval = setInterval(updateCountdown, 1000);
+
+// Run the function once immediately to avoid a 1-second delay
+updateCountdown();
 
 // Video Carousel Logic
 (function () {
